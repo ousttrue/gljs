@@ -1,3 +1,4 @@
+const std = @import("std");
 const ig = @import("cimgui");
 const sokol = @import("sokol");
 const slog = sokol.log;
@@ -5,9 +6,11 @@ const sg = sokol.gfx;
 const sapp = sokol.app;
 const sglue = sokol.glue;
 const simgui = sokol.imgui;
+const Gltf = @import("Gltf.zig");
 
 const state = struct {
     var pass_action: sg.PassAction = .{};
+    var gltf: Gltf = .{};
 };
 
 export fn init() void {
@@ -26,6 +29,10 @@ export fn init() void {
         .load_action = .CLEAR,
         .clear_value = .{ .r = 0.0, .g = 0.5, .b = 1.0, .a = 1.0 },
     };
+
+    if (std.os.argv.len > 1) {
+        state.gltf.load_path(std.mem.span(std.os.argv[1]));
+    }
 }
 
 export fn frame() void {
